@@ -289,4 +289,12 @@ return setmetatable {:register, :unregister, :alias, :run, :names, :get}, {
     return unless command
     ensure_command_can_run command.name
     (...) -> launch_cmd command, table.pack ...
+
+  __newindex: (key, val) =>
+    if val
+      val.name = key
+      register val
+    else
+      command = @[key]
+      unregister command.name
 }
