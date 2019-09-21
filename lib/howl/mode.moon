@@ -118,6 +118,10 @@ unregister = (name) ->
     live[mode] = nil
     signal.emit 'mode-unregistered', :name
 
+alias = (target, name, opts = {}) ->
+  error "Target #{target} does not exist" unless modes[target]
+  modes[name] = by_name target
+
 configure = (mode_name, variables) ->
   error 'Missing argument #1 (mode_name)', 2 unless mode_name
   error 'Missing argument #2 (variables)', 2 unless variables
@@ -148,6 +152,7 @@ return PropertyTable {
   :by_name
   :register
   :unregister
+  :alias
   :configure
   names: get: -> [name for name in pairs modes]
 }
