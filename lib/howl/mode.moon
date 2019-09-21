@@ -142,12 +142,21 @@ signal.register 'mode-unregistered',
   parameters:
     name: 'The name of the mode'
 
-return PropertyTable {
+return setmetatable {
   :for_file
   :for_extension
   :by_name
   :register
   :unregister
   :configure
-  names: get: -> [name for name in pairs modes]
+}, {
+  __index: (key) =>
+    if key == "names" then [name for name in pairs modes]
+    else by_name key
+
+  __newindex: (key, val) =>
+    if val
+      val.name = key
+      register val
+    else unregister key
 }
